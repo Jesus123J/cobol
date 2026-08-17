@@ -1,0 +1,19 @@
+services:
+  mvs:
+    image: rattydave/docker-ubuntu-hercules-mvs:latest
+    platform: linux/amd64
+    container_name: mvs-tk4
+    ports:
+      - "3270:3270"   # terminal 3270 (pantalla verde)
+      - "8038:8038"   # consola web de Hercules
+    restart: unless-stopped
+
+  terminal:
+    build: ./terminal
+    platform: linux/arm64
+    profiles: ["tools"]
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mvs
+    command: ["mvs:3270"]
